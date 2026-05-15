@@ -4,6 +4,13 @@ import "./globals.css";
 import { AuthProvider } from "@/components/providers/session-provider";
 import { Toaster } from "@/components/ui/sonner";
 
+// Haptic feedback helper
+if (typeof window !== "undefined") {
+  (window as any).haptic = () => {
+    if ("vibrate" in navigator) navigator.vibrate(10);
+  };
+}
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
@@ -20,8 +27,12 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Pahadi",
+  },
+  icons: {
+    icon: "/icons/icon-192x192.png",
+    apple: "/icons/icon-192x192.png",
   },
   formatDetection: {
     telephone: false,
@@ -34,6 +45,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

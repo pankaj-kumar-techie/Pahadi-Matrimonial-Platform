@@ -6,6 +6,8 @@ const withPWA = withPWAInit({
   disable: process.env.NODE_ENV === "development",
   register: true,
   cacheOnFrontEndNav: true,
+  reloadOnOnline: true,
+  sw: "sw.js",
 });
 
 const nextConfig: NextConfig = {

@@ -11,12 +11,15 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [installed, setInstalled] = useState(false);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {
-    const handler = (e: any) => { e.preventDefault(); setDeferredPrompt(e); setTimeout(() => setShowInstallBanner(true), 2500); };
+    const handler = (e: any) => { 
+      e.preventDefault(); 
+      setDeferredPrompt(e); 
+      // Show banner after 1.5s instead of 2.5s for faster feel
+      setTimeout(() => setShowInstallBanner(true), 1500); 
+    };
     window.addEventListener("beforeinstallprompt", handler);
     if (window.matchMedia("(display-mode: standalone)").matches) setInstalled(true);
     return () => window.removeEventListener("beforeinstallprompt", handler);
@@ -24,9 +27,21 @@ export default function Home() {
 
   const handleInstall = async () => {
     if (deferredPrompt) {
+      setIsInstalling(true);
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") { setInstalled(true); setShowInstallBanner(false); setDeferredPrompt(null); }
+      if (outcome === "accepted") {
+        setInstalled(true);
+        // Trigger haptic if available
+        if (typeof window !== "undefined" && (window as any).haptic) (window as any).haptic();
+        setTimeout(() => {
+          setShowInstallBanner(false);
+          setIsInstalling(false);
+        }, 1000);
+      } else {
+        setIsInstalling(false);
+      }
+      setDeferredPrompt(null);
     }
   };
 
@@ -42,8 +57,17 @@ export default function Home() {
             className="fixed bottom-0 left-0 right-0 z-[200] p-4 pb-6 bg-gradient-to-t from-brand-sand via-brand-sand to-transparent md:hidden"
           >
             <div onClick={handleInstall} className="bg-brand-emerald rounded-2xl p-4 shadow-[0_-8px_40px_-8px_rgba(6,78,59,0.4)] flex items-center gap-4 cursor-pointer active:scale-[0.98] transition-transform">
-              <div className="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center shrink-0"><Download className="w-5 h-5 text-white" /></div>
-              <div className="flex-1"><p className="text-white font-bold text-sm">Install Pahadi App</p><p className="text-white/50 text-[10px]">Free • No app store • Offline</p></div>
+              <div className="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center shrink-0">
+                {isInstalling ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : installed ? <UserCheck className="w-5 h-5 text-emerald-300" /> : <Download className="w-5 h-5 text-white" />}
+              </div>
+              <div className="flex-1">
+                <p className="text-white font-bold text-sm">
+                  {isInstalling ? "Installing Pahadi..." : installed ? "App Installed!" : "Install Pahadi App"}
+                </p>
+                <p className="text-white/50 text-[10px]">
+                  {installed ? "Open from your home screen" : "Free • No app store • Offline"}
+                </p>
+              </div>
               <ChevronRight className="w-5 h-5 text-white/40 shrink-0" />
             </div>
             <button onClick={(e) => { e.stopPropagation(); setShowInstallBanner(false); }} className="w-full text-center mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Maybe Later</button>
@@ -285,8 +309,19 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <Button className="w-full h-14 bg-white text-brand-emerald font-bold text-base rounded-2xl shadow-xl hover:bg-slate-50 active:scale-95 transition-all gap-2">
-                <Download className="w-5 h-5" /> Install Free — One Tap
+              <Button 
+                onClick={handleInstall}
+                className="w-full h-14 bg-white text-brand-emerald font-bold text-base rounded-2xl shadow-xl hover:bg-slate-50 active:scale-95 transition-all gap-2"
+                disabled={isInstalling || installed}
+              >
+                {isInstalling ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : installed ? (
+                  <UserCheck className="w-5 h-5" />
+                ) : (
+                  <Download className="w-5 h-5" />
+                )}
+                {isInstalling ? "Installing..." : installed ? "Installed! ✅" : "Install Free — One Tap"}
               </Button>
             </div>
           </div>
