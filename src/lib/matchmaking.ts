@@ -63,5 +63,5 @@ export async function getCuratedMatches(userId: string) {
   );
 
   // Sort by score and take top 5
-  return scoredMatches.sort((a, b) => b.compatibilityScore - a.compatibilityScore).slice(0, 5);
+  return scoredMatches.sort((a: { compatibilityScore: number }, b: { compatibilityScore: number }) => b.compatibilityScore - a.compatibilityScore).slice(0, 5);
 }
