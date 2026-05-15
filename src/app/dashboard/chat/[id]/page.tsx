@@ -10,7 +10,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function ChatRoomPage({ params }: { params: { id: string } }) {
+import { use } from "react";
+
+export default function ChatRoomPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [messages, setMessages] = useState([
     { id: 1, text: "Hi! I really liked your profile.", sender: "them", time: "10:00 AM" },
     { id: 2, text: "Thanks! I liked yours too. Are you originally from Kangra?", sender: "me", time: "10:02 AM" },
