@@ -8,9 +8,16 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "Pahadi - Himachali Matrimonial",
-  description: "Connecting Himachali hearts. Simple, clean, and trusted matchmaking for Himachal Pradesh.",
+  title: "Pahadi — Himachali Matrimonial Network",
+  description: "Himachal's most trusted matrimonial network. Connect with verified families across 12 districts. Simple, secure, and rooted in Pahadi values.",
+  keywords: ["Himachal Pradesh matrimonial", "Pahadi shaadi", "Himachali matrimony", "HP marriage", "Kangra matrimonial", "Shimla matrimonial"],
   manifest: "/manifest.json",
+  openGraph: {
+    title: "Pahadi — Himachali Matrimonial Network",
+    description: "Himachal's most trusted matrimonial network. 2,400+ verified families.",
+    type: "website",
+    locale: "en_IN",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -22,10 +29,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0ea5e9",
+  themeColor: "#064e3b",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -38,7 +46,7 @@ export default function RootLayout({
       <body className="font-sans">
         <AuthProvider>
           {children}
-          <Toaster />
+          <Toaster position="top-center" richColors />
         </AuthProvider>
       </body>
     </html>

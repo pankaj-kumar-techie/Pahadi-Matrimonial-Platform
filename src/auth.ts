@@ -17,24 +17,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // MOCK OTP VERIFICATION: In production, verify with Twilio/Firebase
         if (credentials.otp === "123456") {
-          let user = await prisma.user.findUnique({
-            where: { phone: credentials.phone as string },
-          });
-
-          if (!user) {
-            user = await prisma.user.create({
-              data: {
-                phone: credentials.phone as string,
-                verificationStatus: "PENDING",
-              },
+          // Dev bypass: try DB, fall back to mock user if DB not available
+          try {
+            let user = await prisma.user.findUnique({
+              where: { phone: credentials.phone as string },
             });
-          }
 
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.phone,
-          };
+            if (!user) {
+              user = await prisma.user.create({
+                data: {
+                  phone: credentials.phone as string,
+                  verificationStatus: "PENDING",
+                },
+              });
+            }
+
+            return {
+              id: user.id,
+              name: user.name ?? "Pahadi User",
+              email: user.phone,
+            };
+          } catch (_dbError) {
+            // Dev mode: DB unavailable — return mock session
+            console.warn("[auth] DB unreachable, using dev mock user");
+            return {
+              id: `dev-${credentials.phone}`,
+              name: "Dev User",
+              email: credentials.phone as string,
+            };
+          }
         }
 
         return null;

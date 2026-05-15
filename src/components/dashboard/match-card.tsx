@@ -51,6 +51,8 @@ export function MatchCard({ user, onInterest }: MatchCardProps) {
             src={user.image} 
             alt={user.name} 
             fill 
+            priority
+            loading="eager"
             className="object-cover group-hover:scale-105 transition-transform duration-700"
           />
         ) : (
