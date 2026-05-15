@@ -56,7 +56,7 @@ export async function getCuratedMatches(userId: string) {
   });
 
   const scoredMatches = await Promise.all(
-    potentialMatches.map(async (other) => {
+    potentialMatches.map(async (other: typeof user) => {
       const score = await getCompatibilityScore(user, other);
       return { ...other, compatibilityScore: score };
     })
