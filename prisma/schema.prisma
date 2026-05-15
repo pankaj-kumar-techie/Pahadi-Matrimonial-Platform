@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  phone               String               @unique
+  name                String?
+  gender              String?
+  dob                 DateTime?
+  district            String?
+  tehsil              String?
+  village             String?
+  community           String?
+  preferences         Json?                // { partnerGender: string, ageRange: { min: number, max: number }, districtPreference: string[], kundliMandatory: boolean }
+  verificationStatus  String               @default("PENDING") // PENDING, VERIFIED, REJECTED
+  trustScore          Int                  @default(0)
+  isPremium           Boolean              @default(false)
+  premiumExpiry       DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  verificationDocs    VerificationDocument[]
+  matchesAsA          Match[]              @relation("UserA")
+  matchesAsB          Match[]              @relation("UserB")
+  interestsSent       Interest[]           @relation("FromUser")
+  interestsReceived   Interest[]           @relation("ToUser")
+  messagesSent        Message[]            @relation("Sender")
+  kundliRequestsAsA   KundliRequest[]      @relation("KundliUserA")
+  kundliRequestsAsB   KundliRequest[]      @relation("KundliUserB")
+}
+
+model VerificationDocument {
+  id             String   @id @default(cuid())
+  userId         String
+  aadhaarHash    String?
+  selfieUrl      String?
+  digilockerData Json?
+  score          Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Match {
+  id                 String   @id @default(cuid())
+  userAId            String
+  userBId            String
+  compatibilityScore Int
+  status             String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt          DateTime @default(now())
+
+  userA              User     @relation("UserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB              User     @relation("UserB", fields: [userBId], references: [id], onDelete: Cascade)
+  messages           Message[]
+
+  @@unique([userAId, userBId])
+}
+
+model Interest {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  status     String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt  DateTime @default(now())
+
+  fromUser   User     @relation("FromUser", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser     User     @relation("ToUser", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  matchId   String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  sender    User     @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model KundliRequest {
+  id            String   @id @default(cuid())
+  userAId       String
+  userBId       String
+  birthDetailsA Json     // { dob: string, tob: string, pob: string }
+  birthDetailsB Json
+  gunaScore     Int?
+  result        String?
+  createdAt     DateTime @default(now())
+
+  userA         User     @relation("KundliUserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB         User     @relation("KundliUserB", fields: [userBId], references: [id], onDelete: Cascade)
+}

@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pahadi Matrimonial Platform
 
-## Getting Started
+A premium, clean, and AI-verified matrimonial Progressive Web App (PWA) exclusively for Himachal Pradesh.
 
-First, run the development server:
+## 🏔️ Tech Stack
+- **Next.js 16 (App Router)** - Fast, modern React framework
+- **TypeScript** - Type safety for robust code
+- **Prisma 7** - Modern ORM with PostgreSQL support
+- **NextAuth v5 (Auth.js)** - Secure authentication (Phone OTP Mock)
+- **Tailwind CSS + shadcn/ui** - Premium design system
+- **Framer Motion** - Smooth animations and micro-interactions
+- **Sonner** - Modern toast notifications
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
+- **Mobile-First Design**: Optimized for a premium mobile experience.
+- **5-Step Onboarding**: Streamlined user profile creation with cascading HP district/tehsil lists.
+- **Matchmaking Engine**: Compatibility scoring based on location, community, and age.
+- **Kundli Matching**: Integrated 36 Guna Milan tool (simulated).
+- **AI Verification**: Simulated profile verification for trust and safety.
+- **Freemium Flow**: Premium upgrade path for unlimited matches.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Local Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Database Setup**:
+   Ensure you have a PostgreSQL instance running and update `.env` with your `DATABASE_URL`.
+   ```bash
+   npx prisma generate
+   ```
 
-## Learn More
+3. **Run Dev Server**:
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## 📱 PWA Support
+The app is installable on Android and iOS. It includes a custom manifest and service worker configuration for offline support.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔒 Security
+- **Auth Secret**: Securely signed cookies.
+- **Proxy**: Uses the new Next.js 16 `proxy.ts` convention for edge-ready logic.
