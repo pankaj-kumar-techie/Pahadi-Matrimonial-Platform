@@ -6,11 +6,14 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Heart, ShieldCheck, Sparkles, ChevronRight, Users, Download,
-  Smartphone, Star, MapPin, Lock, UserCheck, MessageCircle, ArrowRight
+  Smartphone, Star, MapPin, Lock, UserCheck, MessageCircle, ArrowRight, Loader2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [installed, setInstalled] = useState(false);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {

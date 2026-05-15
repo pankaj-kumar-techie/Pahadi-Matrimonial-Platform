@@ -188,10 +188,10 @@ export default function LoginForm() {
             <div className="pt-4 text-center">
                <button 
                 type="button" 
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push("/onboarding")}
                 className="text-[9px] font-bold text-slate-300 hover:text-brand-gold uppercase tracking-[0.2em] transition-all"
                >
-                 Bypass Security (Dev Mode)
+                 Bypass Security (Go to Onboarding)
                </button>
             </div>
           </motion.div>
